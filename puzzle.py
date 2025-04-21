@@ -61,3 +61,19 @@ class Puzzle:
             row = self.board[i:i+4]
             lines.append(" ".join(f"{n:2}" if n != 0 else "  " for n in row))
         return "\n".join(lines)
+
+    def get_successors(self):
+        successors = []
+        blank_pos = self.board.index(0)
+        row, col = divmod(blank_pos, 4)
+
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # up, down, left, right
+
+        for dr, dc in directions:
+            new_row, new_col = row + dr, col + dc
+            if 0 <= new_row < 4 and 0 <= new_col < 4:
+                new_blank = new_row * 4 + new_col
+                new_board = self.board[:]
+                new_board[blank_pos], new_board[new_blank] = new_board[new_blank], new_board[blank_pos]
+                successors.append(Puzzle(new_board))
+        return successors
